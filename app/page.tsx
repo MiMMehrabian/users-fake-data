@@ -1,113 +1,110 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
+"use client"
+import { MobilePagination } from "@/components/MobilePagination";
+import { CircularPagination } from "@/components/Pagination";
+import { RootState } from "@/redux/reducers";
+import { userFetchRequest } from "@/redux/users/actions";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
+  const users: Array<any> = useSelector((state: RootState) => state.users.data);
+  const perPage = useSelector((state: RootState) => state.users.count);
+  const loading: boolean = useSelector((state: RootState) => state.users.loading);
+  const params = useSearchParams()
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const path = usePathname()
+
+  useEffect(() => {
+    const page = params.get("page")
+    const perPage = params.get("per_page")
+    const qs = {
+      page,
+      "per_page": perPage,
+    }
+    dispatch(userFetchRequest(qs))
+  }, [dispatch, params])
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="p-10 bg-white  rounded-[.95rem] shadow-md">
+      {
+        !loading && <div className="max-w-full overflow-x-auto h-[calc(100vh-35vh)] custom-overflow overflow-y-auto rounded-[.95rem]">
+          <div className="flex-auto block py-8 pt-6 px-9">
+            <div className="overflow-x-auto">
+              <table className="w-full my-0 align-middle text-dark border-neutral-200">
+                <thead className="align-bottom">
+                  <tr className="font-semibold text-[0.95rem] text-secondary-dark">
+                    <th className="pb-3 text-start min-w-[175px]">First Name</th>
+                    <th className="pb-3 text-start min-w-[100px]">Last Name</th>
+                    <th className="pb-3 pr-12 text-start min-w-[175px]">Email</th>
+                    <th className="pb-3 pr-12 text-end min-w-[175px]"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    users.map((e) => {
+                      return (
+                        <tr key={e.id} className="border-b border-dashed last:border-b-0">
+                          <td className="p-3 pl-0">
+                            <div className="flex items-center">
+                              <div className="relative inline-block shrink-0 rounded-2xl me-3">
+                                <img src={e.avatar} className="w-[50px] h-[50px] inline-block shrink-0 rounded-2xl" alt="" />
+                              </div>
+                              <div className="flex flex-col justify-start">
+                                <a href="javascript:void(0)" className="mb-1 font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary">{e.first_name}</a>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-3 pr-0 text-start">
+                            <span className="font-semibold text-light-inverse text-md/normal">{e.last_name}</span>
+                          </td>
+                          <td className="p-3 pr-0 text-start">
+                            <span className="text-center align-baseline inline-flex px-2 py-1 mr-auto items-center font-semibold text-base/none text-success bg-success-light rounded-lg">
+                              {e.email}
+                            </span>
+                          </td>
+                          <td className="p-3 pr-0 text-end">
+                            <button onClick={s => router.push("/user/" + e.id)} className="ml-auto relative text-secondary-dark bg-light-dark hover:text-primary flex items-center h-[25px] w-[25px] text-base font-medium leading-normal text-center align-middle cursor-pointer rounded-2xl transition-colors duration-200 ease-in-out shadow-none border-0 justify-center">
+                              <span className="flex items-center justify-center p-0 m-0 leading-none shrink-0 ">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                              </span>
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+      }
+      {
+        loading && <div className="flex  h-[calc(100vh-35vh)] items-center justify-center bg-gray-100">
+          <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-black border-t-transparent"></div>
+        </div>
+      }
+      <div className="block">
+        <CircularPagination />
+      </div >
+      <br />
+      {!loading && (<div className="flex justify-center place-items-center gap-x-5">
+        <label htmlFor="select">
+          result per page
+        </label>
+        <select name="" id="" className="p-2 rounded-lg" value={perPage} onChange={e => router.push(path + `?page=1&per_page=${e.target.value}`)}>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+      </div>)
+      }
+    </div >
+  )
 }
