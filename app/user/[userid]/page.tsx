@@ -1,10 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable jsx-a11y/alt-text */
 "use client"
 import { RootState } from '@/redux/reducers'
 import { fetchUser } from '@/redux/users/actions'
-import { useParams, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,6 +11,7 @@ function index() {
     const params = useParams()
     const user = useSelector((state: RootState) => state.users.user);
     const dispatch = useDispatch()
+    // fetch user details
     useEffect(() => {
         const id = params
         dispatch(fetchUser(id.userid))
@@ -20,7 +20,7 @@ function index() {
         <div className="p-10 bg-white  rounded-[.95rem] shadow-md">
             <span>
                 Avatar :
-                <img src={user?.avatar} />
+                <Image src={user?.avatar} alt='user image' width={100} height={100} />
             </span>
             <br />
             <br />

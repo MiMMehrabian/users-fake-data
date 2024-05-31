@@ -15,31 +15,21 @@ export function CircularPagination() {
     const perPage = params.get("per_page")
 
     const totalPages = useSelector((state: RootState) => state.users.totalPages);
-
+    // previous button function
     useEffect(() => {
         if (page) {
             setActive(Number(page));
         }
     }, [page, params]);
 
-    const getItemProps = (index: React.SetStateAction<number>) =>
-    ({
-        variant: active === index ? "filled" : "text",
-        color: "white",
-        onClick: () => {
-            router.push(pathname + `?page=${page}&per_page=${perPage}`);
-            setActive(index);
-        },
-        className: "rounded-full",
-    } as any);
-
-    const next = () => {
+    // next button function
+    const next = (): void => {
         if (active === totalPages) return;
         router.push(pathname + `?page=${String(active + 1)}${perPage ? `&per_page=${perPage}` : ""}`)
         setActive(active + 1);
     };
-
-    const prev = () => {
+    // previous button function
+    const prev = (): void => {
         if (active === 1) return;
         router.push(pathname + `?page=${String(active - 1)}${perPage ? `&per_page=${perPage}` : ""}`)
         setActive(active - 1);

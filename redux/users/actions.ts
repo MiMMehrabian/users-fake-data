@@ -4,6 +4,7 @@ import queryString from "query-string";
 import axios from "@/configs/axios";
 import { USER_ROUTE } from "@/configs/routes";
 
+// action : get user data from API
 export const userFetchRequest = (query: object): any => async (dispatch: Dispatch<any>) => {
     dispatch({ type: GET_USERS, payload: null });
     const queryS: any = queryString.stringify(query, { encode: false });
@@ -19,7 +20,7 @@ export const userFetchRequest = (query: object): any => async (dispatch: Dispatc
         });
 };
 
-
+// action : fetch a user data
 export const fetchUser = (id: any): any => async (dispatch: Dispatch<any>, getState: any) => {
     const { data } = getState().users;
     const filteredUser = data.find((user: any) => user.id == id);

@@ -6,7 +6,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/reducers";
 
-export function MobilePagination({ circleCount, count }: any) {
+export function MobilePagination({ circleCount }: any) {
     const [active, setActive] = React.useState(1);
     const router = useRouter();
     const pathname = usePathname();
@@ -14,7 +14,7 @@ export function MobilePagination({ circleCount, count }: any) {
     const page = params.get("page")
     const perPage = params.get("per_page")
     const totalPages = useSelector((state: RootState) => state.users.totalPages);
-
+    // check page activity
     useEffect(() => {
         if (page) {
             setActive(Number(page));
@@ -28,14 +28,14 @@ export function MobilePagination({ circleCount, count }: any) {
             setActive(index);
         },
     });
-
-    const next = () => {
+    // next button function
+    const next = (): void => {
         if (active === circleCount) return;
         router.push(pathname + `?page=${String(active + 1)}`)
         setActive(active + 1);
     };
-
-    const prev = () => {
+    // previous button function
+    const prev = (): void => {
         if (active === 1) return;
         router.push(pathname + `?page=${String(active - 1)}`)
         setActive(active - 1);
@@ -58,7 +58,7 @@ export function MobilePagination({ circleCount, count }: any) {
                                     return (
                                         <span
                                             key={key}
-                                            {...getItemProps(key + 1)}                    >
+                                            {...getItemProps(key + 1)}>
                                             {key + 1}
                                         </span>
                                     );

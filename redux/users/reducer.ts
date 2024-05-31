@@ -1,6 +1,17 @@
 import { FAIL_GET_USERS, FETCH_USERS_COUNT, GET_USERS, SUCCESS_GET_USERS, FETCH_USERS_PAGES, FETCH_USERS_PERPAGES, FETCH_THIS_USERS } from "./types";
 
-const initialAdminsState: any = {
+// type : user initial state type
+type UserReducer = {
+    loading: boolean,
+    data: Array<any>,
+    error: string | null,
+    count: string,
+    totalPages: string,
+    perPage: string,
+    user: object
+}
+// user initial state
+const initialUserState: UserReducer = {
     loading: false,
     data: [],
     error: null,
@@ -9,8 +20,8 @@ const initialAdminsState: any = {
     perPage: "",
     user: {}
 };
-
-const userReducer = (state = initialAdminsState, { type, payload }: any) => {
+// reducer : user reducer
+const userReducer = (state = initialUserState, { type, payload }: any) => {
     switch (type) {
         case GET_USERS:
             return {
